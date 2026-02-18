@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <math.h>
+#include "VecFunc.h"
 
 using namespace std;
 
@@ -29,9 +30,31 @@ int main(){
     width = floor(width * pixelRatio);
     float screenRatio = float(height) / float(width);
 
-    SetWindow(width, height);
-    for (int i = 0; i < 100000; i++)
-        printf("fdfs");
+	wstring screen(width * height, L' ');
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD written;
 
+    SetWindow(width, height);
+    for (int t = 0; t < 100000; t++){
+		for (int x = 0; x < width; x++){
+			for (int y = 0; y < height; y++){
+				wchar_t finalPixel = L' ';
+				vec2 uv = vec2(x - width / 2, y - height / 2);
+				if (uv.x * uv.x + uv.y * uv.y < 20)
+					finalPixel = L'#';
+				
+				screen[y * width + x] = finalPixel;
+			}
+		}
+		
+		WriteConsoleOutputCharacterW(
+            hConsole,
+            screen.c_str(),
+            width * height,
+            {0, 0},
+            &written
+        );
+		Sleep(100);
+	}
     return 0;
 }
