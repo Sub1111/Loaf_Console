@@ -51,9 +51,11 @@ int main(){
 				vec3 rd = normalize(vec3(uv));
 
 				float d = RayMarch(ro, rd);
-				
-				int gradientInd = round(d/6.0f * 17);
-				finalPixel = gradient[min(16, gradientInd)];
+				vec3 p = ro + rd * d;
+
+				float dif = GetLight(p, t / 2.0f);
+				int gradientInd = round(dif * 16);
+				finalPixel = gradient[gradientInd];
 				
 				screen[y * width + x] = finalPixel;
 			}
@@ -66,7 +68,7 @@ int main(){
             {0, 0},
             &written
         );
-		Sleep(100);
+		Sleep(50);
 	}
     return 0;
 }

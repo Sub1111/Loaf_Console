@@ -12,9 +12,13 @@ float length(vec2 const& v) { return sqrt(v.x * v.x + v.y * v.y);}
 float length(vec3 const& v) { return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);}
 
 vec3 normalize(vec3 v) { return v / length(v);}
+float dot(vec3 const& v, vec3 const& u) { return (v.x * u.x + v.y * u.y + v.z * u.z);}
 
 float sdSphere(vec3 p, vec3 const& pos, float r){ return length(p - pos) - r;}
 float sdPlane(vec3 p, float y){ return p.y - y;}
+
+
+float RayMarch(vec3 ro, vec3 rd);
 
 float GetDist(vec3 const& p){
     float dS = sdSphere(p, vec3(0, 1, 4), 1);
@@ -33,6 +37,19 @@ vec3 GetNormal(vec3 p){
     );
 
     return normalize(n);
+}
+
+float GetLight(vec3 p, float t){
+    vec3 lightPos = vec3(0, 5, 4);
+    lightPos.x += sin(t) * 2.0f;
+    lightPos.z += cos(t) * 2.0f;
+    vec3 l = normalize(lightPos - p);
+    vec3 n = GetNormal(p);
+
+    float dif = max(0.0f, min(1.0f, dot(l, n)));
+    float d = RayMarch(p + n * SURF_DIST * 2.0f, l);
+    if (d < length(lightPos-p)) dif *= 0.1f;
+    return dif;
 }
 
 float RayMarch(vec3 ro, vec3 rd){
