@@ -43,6 +43,7 @@ int main(){
 			for (int y = 0; y < height; y++){
 				vec2 uv = vec2(x - width / 2, y - height / 2) / resolution;
 				uv.x = uv.x * pixelRatio * screenRatio;
+				uv.y *= -1;
 
 				finalPixel = L' ';
 

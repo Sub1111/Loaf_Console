@@ -17,11 +17,22 @@ float sdSphere(vec3 p, vec3 const& pos, float r){ return length(p - pos) - r;}
 float sdPlane(vec3 p, float y){ return p.y - y;}
 
 float GetDist(vec3 const& p){
-    float dS = sdSphere(p, vec3(0, 2, 4), 1);
+    float dS = sdSphere(p, vec3(0, 1, 4), 1);
     float dP = sdPlane(p, 0);
 
     float d = min(dS, dP);
     return d;
+}
+
+vec3 GetNormal(vec3 p){
+    float d = GetDist(p);
+    vec3 n = vec3(
+        d - GetDist(p - vec3(0.1f, 0, 0)),
+        d - GetDist(p - vec3(0, 0.1f, 0)),
+        d - GetDist(p - vec3(0, 0, 0.1f))
+    );
+
+    return normalize(n);
 }
 
 float RayMarch(vec3 ro, vec3 rd){
