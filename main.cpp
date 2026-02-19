@@ -25,10 +25,11 @@ int main(){
     int k = 8;
     int width = 16 * k;
     int height = 9 * k;
+	vec2 resolution = vec2(float(width), float(height));
 
-    float pixelRatio = 24.0f/11.0f;
-    width = floor(width * pixelRatio);
-    float screenRatio = float(height) / float(width);
+    float pixelRatio = 8.0f/16.0f;
+    width = floor(width / pixelRatio);
+    float screenRatio = float(width) / float(height);
 
 	wstring screen(width * height, L' ');
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -39,8 +40,9 @@ int main(){
 		for (int x = 0; x < width; x++){
 			for (int y = 0; y < height; y++){
 				wchar_t finalPixel = L' ';
-				vec2 uv = vec2(x - width / 2, y - height / 2);
-				if (uv.x * uv.x + uv.y * uv.y < 20)
+				vec2 uv = vec2((x - width / 2) / float(width), (y - height / 2) / float(height));
+				uv.x = uv.x * pixelRatio * screenRatio;
+				if (uv.x * uv.x + uv.y * uv.y < 0.5f)
 					finalPixel = L'#';
 				
 				screen[y * width + x] = finalPixel;
