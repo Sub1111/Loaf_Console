@@ -50,10 +50,10 @@ int main(){
 				vec3 ro = vec3(0, 1, 0);
 				vec3 rd = normalize(vec3(uv));
 
-				float d = RayMarch(ro, rd);
+				float d = RayMarch(ro, rd, t / 8.0f);
 				vec3 p = ro + rd * d;
 
-				float dif = GetLight(p, t / 2.0f);
+				float dif = GetLight(p, t / 8.0f);
 				int gradientInd = round(dif * 16);
 				finalPixel = gradient[gradientInd];
 				
@@ -68,7 +68,7 @@ int main(){
             {0, 0},
             &written
         );
-		Sleep(50);
+		// Sleep(10);
 	}
     return 0;
 }
