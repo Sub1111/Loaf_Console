@@ -68,7 +68,7 @@ int main(){
             {0, 0},
             &written
         );
-		// Sleep(10);
+		Sleep(10);
 	}
     return 0;
 }

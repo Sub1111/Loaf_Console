@@ -15,6 +15,8 @@ float length(vec3 const& v) { return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);}
 
 vec3 normalize(vec3 v) { return v / length(v);}
 float dot(vec3 const& v, vec3 const& u) { return (v.x * u.x + v.y * u.y + v.z * u.z);}
+vec3 abs(vec3 v) { return vec3(abs(v.x), abs(v.y), abs(v.z));}
+vec3 max(vec3 v, vec3 u) { return vec3(max(v.x, u.x), max(v.y, u.y), max(v.z, u.z));}
 
 float smin( float a, float b, float k ){
     float h = max(k-abs(a-b),0.0f);
@@ -42,6 +44,10 @@ vec3 rotateZ(vec3 a, float angle){
 
 float sdSphere(vec3 p, vec3 const& pos, float r){ return length(p - pos) - r;}
 float sdPlane(vec3 p, float y){ return p.y - y;}
+float sdBox( vec3 p, vec3 b ){
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0f);
+}
 float sdEllipsoid(vec3 p, vec3 c, vec3 r){
     return (length( (p-c)/r ) - 1.0) * min(min(r.x,r.y),r.z);
 }
@@ -67,12 +73,14 @@ float sdLoaf(vec3 p, vec3 pos, float scale){
 float RayMarch(vec3 ro, vec3 rd, float t);
 float GetDist(vec3 p, float t){
     // float dS2 = sdSphere(p, vec3(sin(t)*3.0f, 1, 4), 0.5);
-    vec3 loafPos = vec3(0, 1.f, 4);
+    /*vec3 loafPos = vec3(0, 1.f, 4);
     loafPos = rotateZ(rotateY(loafPos, t), t/2.f);
-    float dLoaf = sdLoaf(rotateZ(rotateY(p, t), t/2.f), loafPos, 1.);
-    
+    float dLoaf = sdLoaf(rotateZ(rotateY(p, t), t/2.f), loafPos, 1.);*/
+    vec3 bp = p - vec3(0, 1, 4);
+    bp = rotateZ(rotateY(bp, t), t/2.f);
+    float dBox = sdBox(bp, vec3(1, 1, 1));
 
-    float d = min(dLoaf, 9999.f);
+    float d = min(dBox, 9999.f);
     return d;
 }
 
