@@ -48,6 +48,10 @@ float sdBox( vec3 p, vec3 b ){
   vec3 q = abs(p) - b;
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0f);
 }
+float sdTorus( vec3 p, vec2 t ){
+  vec2 q = vec2(length(vec2(p.x, p.z))-t.x,p.y);
+  return length(q)-t.y;
+}
 float sdEllipsoid(vec3 p, vec3 c, vec3 r){
     return (length( (p-c)/r ) - 1.0) * min(min(r.x,r.y),r.z);
 }
@@ -77,10 +81,12 @@ float GetDist(vec3 p, float t){
     loafPos = rotateZ(rotateY(loafPos, t), t/2.f);
     float dLoaf = sdLoaf(rotateZ(rotateY(p, t), t/2.f), loafPos, 1.);*/
     vec3 bp = p - vec3(0, 1, 4);
+    bp = rotateX(bp, 3.14/2.);
     bp = rotateZ(rotateY(bp, t), t/2.f);
-    float dBox = sdBox(bp, vec3(1, 1, 1));
+    //float dBox = sdBox(bp, vec3(1, 1, 1));
+    float dTor = sdTorus(bp, vec2(1, 0.5));
 
-    float d = min(dBox, 9999.f);
+    float d = min(dTor, 9999.f);
     return d;
 }
 
